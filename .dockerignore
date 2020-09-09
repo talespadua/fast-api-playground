@@ -1,0 +1,5 @@
+*
+!pyproject.toml
+!project/**
+!app.py
+!poetry.lock

@@ -1,0 +1,38 @@
+version: '3.7'
+
+services:
+  project:
+    build: .
+    container_name: project_app
+    command: uvicorn project.main:app --host '0.0.0.0' --port 8080
+    environment:
+      - WAIT_HOSTS=mysql:3306
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PORT=3306
+      - DB_DATABASE=projectdb
+      - DB_PASSWORD=password
+      - DB_CONNECTION_POOL_SIZE=5
+      - DB_CONNECTION_POOL_MAX_OVERFLOW=10
+      - DB_CONNECTION_POOL_TIMEOUT=30
+      - DB_CONNECTION_POOL_RECYCLE=3600
+      - PYTHONPATH=.
+      - ENVIRONMENT=dev
+    volumes:
+      - ./project:/app/project
+      - ./test:/app/test
+      - ./pyproject.toml:/app/pyproject.toml
+      - ./poetry.lock:/app/poetry.lock
+      - ./Makefile:/app/Makefile
+      - ./mypy.ini:/app/mypy.ini
+      - ./coverage-reports:/app/coverage-reports
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+  db:
+    image: mysql:5.7
+    container_name: project_mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=projectdb
