@@ -3,3 +3,4 @@
 !project/**
 !app.py
 !poetry.lock
+!alembic.ini

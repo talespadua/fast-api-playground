@@ -8,8 +8,7 @@ raise-infrastructure:
 	docker-compose up -d
 
 test:
-	#make pipeline/db_to_start
-	$(DOCKER_COMP_EXEC_CMD) python -m pytest --cov-report=term-missing:skip-covered --cov=project test/ --no-cov-on-fail
+	$(DOCKER_COMP_EXEC_CMD) python -m pytest test/
 
 mypy:
 	$(DOCKER_COMP_EXEC_CMD) python -m mypy .
@@ -18,10 +17,10 @@ test-single:
 	$(DOCKER_COMP_EXEC_CMD) python -m pytest $(test)
 
 black:
-	$(DOCKER_COMP_EXEC_CMD) black --check .
+	$(DOCKER_COMP_EXEC_CMD) black --check ./test ./project
 
 flake8:
-	$(DOCKER_COMP_EXEC_CMD) flake8 ./project --extend-ignore=C901 --max-line-length=88
+	$(DOCKER_COMP_EXEC_CMD) flake8 ./project --max-line-length=88
 
 pipeline/qa:
 	make mypy
@@ -29,20 +28,11 @@ pipeline/qa:
 	make flake8
 	make test
 
-pipeline/db_to_start:
-	counter=0
-	while [ ! "$$(docker logs mysql 2>&1 | grep "MySQL init process done. Ready for start up.")" ]; do \
-		counter=$$((counter+1)); \
-		sleep 5; \
-		echo "Rechecking if image is up"; \
-		if [ "$$counter" -eq 50 ]; then \
-			echo "Too many retries"; \
-			exit 1; \
-		fi \
-	done
-
 shell:
 	$(info Connecting container)
 	docker exec -it ${BUILD_IMAGE_NAME} /bin/sh
+
+make-migration:
+	$(DOCKER_COMP_EXEC_CMD) alembic revision --autogenerate -m "$(test)"
 
 .PHONY: test lint
