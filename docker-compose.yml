@@ -18,6 +18,9 @@ services:
       - DB_CONNECTION_POOL_RECYCLE=3600
       - PYTHONPATH=.
       - ENVIRONMENT=dev
+      - SECRET_KEY=e9e9cb2717a5622d690aa661909de0f84986e3a2148dd828fab08d5b51d13a4d
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
     volumes:
       - ./migration:/app/migration
       - ./project:/app/project

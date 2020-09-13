@@ -33,6 +33,23 @@ class RetailerRepository:
 
             return cast(RetailerModel, retailer)
 
+    def get_retailer_by_email(
+        self,
+        retailer_email: Optional[str]
+    ) -> Optional[RetailerModel]:
+        with self.conn.session() as session:
+            session.expire_on_commit = False
+            try:
+                retailer = (
+                    session.query(RetailerModel)
+                    .filter(RetailerModel.email == retailer_email)
+                    .one()
+                )
+            except NoResultFound:
+                return None
+
+            return cast(RetailerModel, retailer)
+
     def insert_retailer(self, retailer_model: RetailerModel) -> bool:
         with self.conn.session() as session:
             session.expire_on_commit = False

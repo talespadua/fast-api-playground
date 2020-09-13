@@ -1,6 +1,7 @@
 from typing import Optional
 
 from project.config import Config
+from project.libs.criptography.password_handler import get_password_hash
 from project.logger import Logger
 from project.dtos.retailer import RetailerInputDTO, RetailerOutputDTO
 from project.dal.retailer import RetailerRepository
@@ -31,6 +32,7 @@ class RetailerService:
         self,
         retailer: RetailerInputDTO
     ) -> Optional[RetailerOutputDTO]:
+        retailer.password = get_password_hash(retailer.password)
         retailer_model = convert_input_dto_to_model(retailer)
         if self.retailer_repository.insert_retailer(retailer_model):
             return convert_model_to_output_dto(retailer_model)
