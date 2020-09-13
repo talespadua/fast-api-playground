@@ -26,4 +26,10 @@ async def get_retailer(retailer_id: int) -> RetailerOutputDTO:
 
 @router.post("/retailer/", response_model=RetailerOutputDTO, status_code=201)
 async def post_retailer(retailer: RetailerInputDTO) -> RetailerOutputDTO:
-    return retailerService.insert_retailer(retailer)
+    retailer_output = retailerService.insert_retailer(retailer)
+    if not retailer_output:
+        raise HTTPException(
+            status_code=405,
+            detail="Integrity Error. Check payload data"
+        )
+    return retailer_output

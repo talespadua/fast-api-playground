@@ -7,6 +7,7 @@ from project.main import app
 client = TestClient(app)
 
 
+@pytest.mark.usefixtures("create_tables")
 class TestRetailerRoutes:
     @pytest.fixture()
     def retailer_json(self) -> Dict[str, Any]:
@@ -18,18 +19,23 @@ class TestRetailerRoutes:
         }
 
     class TestGivenInsertRetailer:
-        class TestGivenPayloadIsValid:
-            @pytest.mark.usefixtures("create_tables")  # type: ignore
+        class TestWhenPayloadIsValid:
             def test_insert_is_successfull(self, retailer_json: Dict[str, Any]) -> None:
                 response = client.post("/retailer/", json=retailer_json)
                 assert response.status_code == 201
 
+        class TestWhenThereIsPayloadConflict:
+            def test_insert_is_successfull(self, retailer_json: Dict[str, Any]) -> None:
+                response = client.post("/retailer/", json=retailer_json)
+                assert response.status_code == 405
+
+    class TestGivenGetRetailer:
+        class TestWhenRetailerExists:
+            def test_response_should_be_ok(self) -> None:
                 response = client.get(f"/retailer/1/")
                 assert response.status_code == 200
 
-    class TestGivenGetRetailer:
         class TestWhenRetailerDontExist:
-            @pytest.mark.usefixtures("create_tables")  # type: ignore
             def test_response_is_404(self) -> None:
                 response = client.get("/retailer/99999999999/")
                 assert response.status_code == 404

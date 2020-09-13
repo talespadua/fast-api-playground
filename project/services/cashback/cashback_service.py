@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 
 from project.config import Config
@@ -13,4 +14,8 @@ class CashbackService:
         self.client = client
 
     def get_cashback_credit(self, document: str) -> Optional[CashbackDTO]:
-        return self.client.get_cashback_credit(document)
+        client_response = self.client.get_cashback_credit(document)
+        if client_response:
+            response_dict = json.loads(client_response)
+            return CashbackDTO(credit=response_dict["body"]["credit"])
+        return None

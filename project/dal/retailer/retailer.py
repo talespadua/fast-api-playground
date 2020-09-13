@@ -1,6 +1,6 @@
-from sqlite3 import IntegrityError
 from typing import Optional, cast
 
+from sqlalchemy.exc import IntegrityError  # type: ignore[import]
 from sqlalchemy.orm.exc import NoResultFound  # type: ignore[import]
 
 from project.config import Config
@@ -35,8 +35,8 @@ class RetailerRepository:
 
     def insert_retailer(self, retailer_model: RetailerModel) -> bool:
         with self.conn.session() as session:
+            session.expire_on_commit = False
             try:
-                session.expire_on_commit = False
                 session.add(retailer_model)
                 session.commit()
                 return True
