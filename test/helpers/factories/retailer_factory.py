@@ -1,7 +1,7 @@
 import factory  # type: ignore[import]
 from factory.fuzzy import FuzzyText  # type: ignore[import]
 
-from project.retailers.dto import RetailerInputDTO
+from project.dtos.retailer import RetailerInputDTO
 
 
 class RetailerInputFactory(factory.Factory):  # type: ignore

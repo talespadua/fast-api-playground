@@ -1,7 +1,5 @@
 BUILD_IMAGE_NAME=project
 DOCKER_COMP_EXEC_CMD=docker-compose exec -T $(BUILD_IMAGE_NAME)
-DOCKER_EXEC_CMD=docker exec -it $(BUILD_IMAGE_NAME)
-DOCKER_COMP_CMD=docker-compose -T $(BUILD_IMAGE_NAME)
 
 raise-infrastructure:
 	$(info Raising Infrastructure)
@@ -30,9 +28,9 @@ pipeline/qa:
 
 shell:
 	$(info Connecting container)
-	docker exec -it ${BUILD_IMAGE_NAME} /bin/sh
+	$(DOCKER_COMP_EXEC_CMD) /bin/sh
 
 make-migration:
-	$(DOCKER_COMP_EXEC_CMD) alembic revision --autogenerate -m "$(test)"
+	$(DOCKER_COMP_EXEC_CMD) alembic revision --autogenerate -m "$(description)"
 
 .PHONY: test lint

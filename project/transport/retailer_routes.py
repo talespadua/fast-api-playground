@@ -1,15 +1,18 @@
 from fastapi import APIRouter, HTTPException
 
 from project.config import Config
+from project.dal.retailer import RetailerRepository
 from project.logger import Logger
-from project.retailers.dto import RetailerInputDTO, RetailerOutputDTO
-from project.retailers.retailer_service import RetailerService
+from project.dtos.retailer import RetailerInputDTO, RetailerOutputDTO
+from project.services import RetailerService
 
 config = Config()
 logger = Logger()
 
 router = APIRouter()
-retailerService = RetailerService(config, logger)
+retailer_repository = RetailerRepository(config, logger)
+
+retailerService = RetailerService(config, logger, retailer_repository)
 
 
 @router.get("/retailer/{retailer_id}/", response_model=RetailerOutputDTO)

@@ -5,24 +5,24 @@ from sqlalchemy.orm import Session  # type: ignore
 
 from project.config import Config
 from project.logger import Logger
-from project.models import Base
-from project.mysql_connection.mysql_connection import MySqlConnection
+from project.dal.models import Base
+from project.dal.mysql_connection import MySqlConnection
 
 pytest_plugins = ["test.helpers.fixtures.config_fixtures"]
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def mysql_orm_connection(config: Config, logger: Logger) -> MySqlConnection:
     return MySqlConnection(config, logger)
 
 
-@pytest.fixture()
+@pytest.fixture(scope="module")
 def db_session(mysql_orm_connection: MySqlConnection) -> Session:
     with mysql_orm_connection.session() as session:
         yield session
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="module")
 def create_tables(
     mysql_orm_connection: MySqlConnection,
 ) -> Generator[None, None, None]:
