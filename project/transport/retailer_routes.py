@@ -1,10 +1,11 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 
 from project.config import Config
 from project.dal.retailer import RetailerRepository
 from project.logger import Logger
 from project.dtos.retailer import RetailerInputDTO, RetailerOutputDTO
 from project.services import RetailerService
+from project.transport import auth_service
 
 config = Config()
 logger = Logger()
@@ -16,7 +17,10 @@ retailerService = RetailerService(config, logger, retailer_repository)
 
 
 @router.get("/retailer/{retailer_id}/", response_model=RetailerOutputDTO)
-async def get_retailer(retailer_id: int) -> RetailerOutputDTO:
+async def get_retailer(
+        retailer_id: int,
+        current_retailer: RetailerOutputDTO = Depends(auth_service.get_current_retailer)
+) -> RetailerOutputDTO:
     logger.info(f"Retailer ID: {str(retailer_id)}")
     retailer = retailerService.get_retailer(retailer_id)
     if not retailer:

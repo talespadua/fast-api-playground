@@ -7,13 +7,10 @@ from unittest.mock import MagicMock
 from project.config import Config
 from project.dal.retailer import RetailerRepository
 from project.dtos.auth import Token
-from project.dtos.cashback import CashbackDTO
 from project.dtos.retailer import RetailerOutputDTO
-from project.libs.cashback_client import CashbackClient
 from project.libs.criptography.password_handler import get_password_hash
 from project.logger import Logger
 from project.services.auth.auth_service import AuthService
-from project.services.cashback.cashback_service import CashbackService
 from test.helpers.factories.retailer_factory import RetailerModelFactory
 
 
@@ -33,6 +30,25 @@ class TestAuthService:
             return_value=RetailerModelFactory(password=hashed_password)
         )
         return cast(RetailerRepository, mocked_repository)
+
+    @pytest.fixture()
+    def expires_delta(self, config: Config) -> timedelta:
+        return timedelta(
+            minutes=int(config.get_config("ACCESS_TOKEN_EXPIRE_MINUTES"))
+        )
+
+    @pytest.fixture()
+    def data(self) -> Dict[str, Any]:
+        return {"sub": "t@gmail.com"}
+
+    @pytest.fixture()
+    def token(
+        self,
+        expires_delta: timedelta,
+        data: Dict[str, Any],
+        auth_service: AuthService
+    ) -> str:
+        return auth_service.generate_access_token(data, expires_delta)
 
     @pytest.fixture()
     def auth_service(
@@ -65,20 +81,19 @@ class TestAuthService:
                 ) is RetailerOutputDTO
 
     class TestGenerateAccessToken:
-        @pytest.fixture()
-        def expires_delta(self, config: Config) -> timedelta:
-            return timedelta(
-                minutes=int(config.get_config("ACCESS_TOKEN_EXPIRE_MINUTES"))
-            )
-
-        @pytest.fixture()
-        def data(self) -> Dict[str, Any]:
-            return {"sub": "t@gmail.com"}
-
         def test_should_return_token(
             self,
-            auth_service: AuthService,
-            expires_delta: timedelta,
-            data: Dict[str, Any]
+            token: str
         ) -> None:
-            assert type(auth_service.generate_access_token(data, expires_delta)) is str
+            assert token
+
+    class TestGivenGetCurrentRetailer:
+        class TestWhenTokenIsValid:
+            def test_generate_jwt_token(
+                self,
+                token: str,
+                auth_service: AuthService
+            ) -> None:
+                assert type(
+                    auth_service.get_current_retailer(token)
+                ) is RetailerOutputDTO

@@ -33,8 +33,8 @@ class TestOrderRoutes:
 
     class TestGivenInsertingOrder:
         class TestWhenThereIsNoOrders:
-            def test_get_order_returns_empty(self) -> None:
-                get_response = client.get("/order/")
+            def test_get_order_returns_empty(self, auth_token: Dict[str, str]) -> None:
+                get_response = client.get("/order/", headers=auth_token)
                 response_payload = json.loads(get_response.text)
 
                 assert get_response.status_code == 200
@@ -44,15 +44,23 @@ class TestOrderRoutes:
             def test_insert_is_successful(
                 self,
                 order_json: Dict[str, Any],
-                retailer_json: Dict[str, Any]
+                retailer_json: Dict[str, Any],
+                auth_token: Dict[str, str]
             ) -> None:
                 client.post("/retailer/", json=retailer_json)
-                insert_response = client.post("/order/", json=order_json)
+                insert_response = client.post(
+                    "/order/",
+                    json=order_json,
+                    headers=auth_token
+                )
                 assert insert_response.status_code == 201
 
         class TestWhenThereIsOrder:
-            def test_get_order_finds_existing_order(self) -> None:
-                get_response = client.get("/order/")
+            def test_get_order_finds_existing_order(
+                self,
+                auth_token: Dict[str, str]
+            ) -> None:
+                get_response = client.get("/order/", headers=auth_token)
                 response_payload = json.loads(get_response.text)
 
                 assert get_response.status_code == 200
@@ -69,25 +77,34 @@ class TestOrderRoutes:
 
         def test_update_is_successful(
             self,
-            update_json: Dict[str, Any]
+            update_json: Dict[str, Any],
+            auth_token: Dict[str, str]
         ) -> None:
-            response = client.put("/order/1/", json=update_json)
+            response = client.put("/order/1/", json=update_json, headers=auth_token)
             assert response.status_code == 200
 
         class TestWhenThereIsNoOrder:
-            def test_should_return_404(self, update_json: Dict[str, Any]) -> None:
-                response = client.put("/order/99999/", json=update_json)
+            def test_should_return_404(
+                self,
+                update_json: Dict[str, Any],
+                auth_token: Dict[str, str]
+            ) -> None:
+                response = client.put(
+                    "/order/99999/",
+                    json=update_json,
+                    headers=auth_token
+                )
                 assert response.status_code == 404
 
     class TestGivenDeletingOrder:
         class TestGivenThereIsOrderToDelete:
-            def test_delete_order(self) -> None:
-                response = client.delete("/order/1/")
+            def test_delete_order(self, auth_token: Dict[str, str]) -> None:
+                response = client.delete("/order/1/", headers=auth_token)
                 assert response.status_code == 200
 
         class TestGivenThereIsNoOrderToDelete:
-            def test_delete_order_returns_404(self) -> None:
-                response = client.delete("/order/1/")
+            def test_delete_order_returns_404(self, auth_token: Dict[str, str]) -> None:
+                response = client.delete("/order/1/", headers=auth_token)
                 assert response.status_code == 404
 
     class TestGivenApprovedOrder:
@@ -113,15 +130,22 @@ class TestOrderRoutes:
             self,
             retailer_json: Dict[str, Any],
             order_json: Dict[str, Any],
+            auth_token: Dict[str, str]
         ) -> None:
             client.post("/retailer/", json=retailer_json)
-            client.post("/order/", json=order_json)
+            client.post("/order/", json=order_json, headers=auth_token)
 
         @pytest.mark.usefixtures("add_approved_order")  # type: ignore
-        def test_cannot_delete_approved_order(self) -> None:
-            delete_response = client.delete("/order/2/")
+        def test_cannot_delete_approved_order(self, auth_token: Dict[str, str]) -> None:
+            delete_response = client.delete("/order/2/", headers=auth_token)
             assert delete_response.status_code == 405
 
-        def test_cannot_update_approved_order(self, order_json: Dict[str, Any]) -> None:
-            update_response = client.put("/order/2/", json=order_json)
+        def test_cannot_update_approved_order(
+            self,
+            order_json: Dict[str, Any],
+            auth_token: Dict[str, str]
+        ) -> None:
+            update_response = client.put(
+                "/order/2/", json=order_json, headers=auth_token
+            )
             assert update_response.status_code == 405

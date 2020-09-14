@@ -31,11 +31,16 @@ class TestRetailerRoutes:
 
     class TestGivenGetRetailer:
         class TestWhenRetailerExists:
-            def test_response_should_be_ok(self) -> None:
-                response = client.get(f"/retailer/1/")
+            def test_response_should_be_ok(self, auth_token: Dict[str, str]) -> None:
+                response = client.get(f"/retailer/1/", headers=auth_token)
                 assert response.status_code == 200
 
         class TestWhenRetailerDontExist:
-            def test_response_is_404(self) -> None:
-                response = client.get("/retailer/99999999999/")
+            def test_response_is_404(self, auth_token: Dict[str, str]) -> None:
+                response = client.get("/retailer/99999999999/", headers=auth_token)
                 assert response.status_code == 404
+
+        class TestWhenNotAuthenticated:
+            def test_response_should_be_unauthorized(self) -> None:
+                response = client.get(f"/retailer/1/")
+                assert response.status_code == 401

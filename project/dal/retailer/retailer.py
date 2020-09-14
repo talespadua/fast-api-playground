@@ -59,3 +59,10 @@ class RetailerRepository:
                 return True
             except IntegrityError:
                 return False
+
+    def delete_retailer(self, retailer_id: int) -> None:
+        with self.conn.session() as session:
+            session.query(RetailerModel).filter(
+                RetailerModel.id == retailer_id
+            ).delete()
+            session.commit()
