@@ -20,7 +20,7 @@ cashback_service = CashbackService(config, logger, cashback_client)
 @router.get("/cashback/credit/{document}/", response_model=CashbackDTO)
 def get_cashback_credit(
     document: str,
-    current_retailer: RetailerOutputDTO = Depends(auth_service.get_current_retailer)
+    current_retailer: RetailerOutputDTO = Depends(auth_service.get_current_retailer),
 ) -> CashbackDTO:
     cashback = cashback_service.get_cashback_credit(document)
     if cashback:

@@ -7,7 +7,7 @@ from project.transport import (
     retailer_routes,
     order_routes,
     cashback_routes,
-    auth_routes
+    auth_routes,
 )
 
 app = FastAPI()

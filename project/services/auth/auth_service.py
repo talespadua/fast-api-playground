@@ -19,19 +19,14 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 class AuthService:
     def __init__(
-        self,
-        config: Config,
-        logger: Logger,
-        retailer_repository: RetailerRepository
+        self, config: Config, logger: Logger, retailer_repository: RetailerRepository
     ) -> None:
         self.config = config
         self.logger = logger
         self.retailer_repository = retailer_repository
 
     def authenticate_retailer(
-        self,
-        email: str,
-        password: str
+        self, email: str, password: str
     ) -> Optional[RetailerOutputDTO]:
         retailer_model = self.retailer_repository.get_retailer_by_email(email)
         if not retailer_model:
@@ -41,8 +36,7 @@ class AuthService:
         return convert_model_to_output_dto(retailer_model)
 
     def get_current_retailer(
-        self,
-        token: str = Depends(oauth2_scheme)
+        self, token: str = Depends(oauth2_scheme)
     ) -> Optional[RetailerOutputDTO]:
         credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -53,7 +47,7 @@ class AuthService:
             payload = jwt.decode(
                 token,
                 self.config.get_config("SECRET_KEY"),
-                algorithms=[self.config.get_config("ALGORITHM")]
+                algorithms=[self.config.get_config("ALGORITHM")],
             )
             email: str = payload.get("sub")
             if email is None:
@@ -71,9 +65,7 @@ class AuthService:
         return convert_model_to_output_dto(retailer_model)
 
     def generate_access_token(
-        self,
-        data: Dict[str, Any],
-        expires_delta: timedelta
+        self, data: Dict[str, Any], expires_delta: timedelta
     ) -> str:
         to_encode = data.copy()
         expire = datetime.utcnow() + expires_delta
@@ -82,6 +74,6 @@ class AuthService:
         encoded_jwt = jwt.encode(
             to_encode,
             self.config.get_config("SECRET_KEY"),
-            algorithm=self.config.get_config("ALGORITHM")
+            algorithm=self.config.get_config("ALGORITHM"),
         )
         return cast(str, encoded_jwt)

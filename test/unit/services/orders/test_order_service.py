@@ -10,7 +10,7 @@ from project.logger import Logger
 from project.services import OrderService
 from project.services.order_service.order_service import (
     ALLOWED_DOCUMENT_LIST,
-    OrderStatus
+    OrderStatus,
 )
 from test.helpers.factories.order_factory import OrderModelFactory, OrderInputDTOFactory
 
@@ -29,10 +29,7 @@ class TestOrderService:
 
     @pytest.fixture()
     def order_service(
-        self,
-        config: Config,
-        logger: Logger,
-        order_repository: OrderRepository
+        self, config: Config, logger: Logger, order_repository: OrderRepository
     ) -> OrderService:
         return OrderService(config, logger, order_repository)
 
@@ -43,41 +40,32 @@ class TestOrderService:
 
         @pytest.fixture()
         def order_output_dto(
-                self,
-                order_service: OrderService,
-                order_input: OrderInputDTO
+            self, order_service: OrderService, order_input: OrderInputDTO
         ) -> Optional[OrderOutputDTO]:
             return order_service.insert_order(order_input)
 
         class TestGivenAllowedDocument:
             @pytest.fixture()
             def order_output_dto(
-                self,
-                order_service: OrderService,
-                order_input: OrderInputDTO
+                self, order_service: OrderService, order_input: OrderInputDTO
             ) -> Optional[OrderOutputDTO]:
                 order_input.retailer_document = ALLOWED_DOCUMENT_LIST[0]
                 return order_service.insert_order(order_input)
 
             def test_set_status_to_approved(
-                self,
-                order_output_dto: OrderOutputDTO
+                self, order_output_dto: OrderOutputDTO
             ) -> None:
                 assert order_output_dto.status == OrderStatus.APPROVED.value
 
         class TestGivenNotAllowedDocument:
             def test_set_status_to_approved(
-                self,
-                order_output_dto: OrderOutputDTO
+                self, order_output_dto: OrderOutputDTO
             ) -> None:
                 assert order_output_dto.status == OrderStatus.VALIDATING.value
 
     class TestGetOrderList:
         @pytest.fixture()
-        def output_dto_list(
-            self,
-            order_service: OrderService
-        ) -> List[OrderOutputDTO]:
+        def output_dto_list(self, order_service: OrderService) -> List[OrderOutputDTO]:
             return order_service.get_order_list(page_size=10, page=1)
 
         def test_get_order_list(self, output_dto_list: List[OrderOutputDTO]) -> None:
@@ -87,8 +75,7 @@ class TestOrderService:
         class TestGivenOrderFound:
             @pytest.fixture()
             def output_dto(
-                self,
-                order_service: OrderService
+                self, order_service: OrderService
             ) -> Optional[OrderOutputDTO]:
                 return order_service.get_order_by_id(123)
 
@@ -99,20 +86,17 @@ class TestOrderService:
             @pytest.fixture()
             def order_repository(self) -> OrderRepository:
                 mocked_repository = MagicMock()
-                mocked_repository.get_order_by_id = MagicMock(
-                    return_value=None)
+                mocked_repository.get_order_by_id = MagicMock(return_value=None)
                 return cast(OrderRepository, mocked_repository)
 
             @pytest.fixture()
             def output_dto(
-                self,
-                order_service: OrderService
+                self, order_service: OrderService
             ) -> Optional[OrderOutputDTO]:
                 return order_service.get_order_by_id(123)
 
             def test_get_order_by_id(
-                self,
-                output_dto: Optional[OrderOutputDTO]
+                self, output_dto: Optional[OrderOutputDTO]
             ) -> None:
                 assert output_dto is None
 

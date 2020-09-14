@@ -30,9 +30,7 @@ class TestAuthRoutes:
     class TestGivenRetailerExist:
         class TestWhenPasswordIsWrong:
             def test_its_unauthorized(
-                self,
-                retailer_json: Dict[str, Any],
-                auth_data: Dict[str, str]
+                self, retailer_json: Dict[str, Any], auth_data: Dict[str, str]
             ) -> None:
                 client.post("/retailer/", json=retailer_json)
                 response = client.post("/auth/token/", json=auth_data)

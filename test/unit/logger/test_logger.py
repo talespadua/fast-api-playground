@@ -2,6 +2,7 @@ import pytest
 
 from project.logger import Logger
 
+
 @pytest.fixture()
 def logger() -> Logger:
     return Logger()

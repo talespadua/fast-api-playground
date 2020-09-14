@@ -6,7 +6,7 @@ from project.services.order_service.cashback_rules import (
     BaseRule,
     TenPercentRule,
     FifteenPercentRule,
-    TwentyPercent
+    TwentyPercent,
 )
 
 
@@ -22,9 +22,7 @@ class BaseRuleBehavior:
         assert not rule.accept(invalid_value)
 
     def test_calculate_cashback(
-        self,
-        calculate_cashback: Decimal,
-        expected_cashback: Decimal
+        self, calculate_cashback: Decimal, expected_cashback: Decimal
     ) -> None:
         assert calculate_cashback == expected_cashback
 

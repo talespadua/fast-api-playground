@@ -33,9 +33,7 @@ class TestAuthService:
 
     @pytest.fixture()
     def expires_delta(self, config: Config) -> timedelta:
-        return timedelta(
-            minutes=int(config.get_config("ACCESS_TOKEN_EXPIRE_MINUTES"))
-        )
+        return timedelta(minutes=int(config.get_config("ACCESS_TOKEN_EXPIRE_MINUTES")))
 
     @pytest.fixture()
     def data(self) -> Dict[str, Any]:
@@ -43,19 +41,13 @@ class TestAuthService:
 
     @pytest.fixture()
     def token(
-        self,
-        expires_delta: timedelta,
-        data: Dict[str, Any],
-        auth_service: AuthService
+        self, expires_delta: timedelta, data: Dict[str, Any], auth_service: AuthService
     ) -> str:
         return auth_service.generate_access_token(data, expires_delta)
 
     @pytest.fixture()
     def auth_service(
-        self,
-        config: Config,
-        logger: Logger,
-        retailer_repository: RetailerRepository
+        self, config: Config, logger: Logger, retailer_repository: RetailerRepository
     ) -> AuthService:
         return AuthService(config, logger, retailer_repository)
 
@@ -76,24 +68,20 @@ class TestAuthService:
 
         class TestWhenPassingValidPassword:
             def test_return_model(self, auth_service: AuthService) -> None:
-                assert type(
-                    auth_service.authenticate_retailer("t@gmail.com", "123456")
-                ) is RetailerOutputDTO
+                assert (
+                    type(auth_service.authenticate_retailer("t@gmail.com", "123456"))
+                    is RetailerOutputDTO
+                )
 
     class TestGenerateAccessToken:
-        def test_should_return_token(
-            self,
-            token: str
-        ) -> None:
+        def test_should_return_token(self, token: str) -> None:
             assert token
 
     class TestGivenGetCurrentRetailer:
         class TestWhenTokenIsValid:
             def test_generate_jwt_token(
-                self,
-                token: str,
-                auth_service: AuthService
+                self, token: str, auth_service: AuthService
             ) -> None:
-                assert type(
-                    auth_service.get_current_retailer(token)
-                ) is RetailerOutputDTO
+                assert (
+                    type(auth_service.get_current_retailer(token)) is RetailerOutputDTO
+                )

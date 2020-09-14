@@ -18,9 +18,7 @@ class TestMapOrderModelToResponseDTO:
         return map_order_model_to_response(order_model)
 
     def test_map_order_model_to_response(
-        self,
-        order_model: OrderModel,
-        order_dto: OrderOutputDTO
+        self, order_model: OrderModel, order_dto: OrderOutputDTO
     ) -> None:
         assert order_dto.value == order_model.value
         assert order_dto.code == order_model.code

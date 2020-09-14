@@ -23,7 +23,7 @@ order_service = OrderService(config, logger, order_repository)
 def get_order_list(
     page_size: int = 10,
     page: int = 1,
-    current_retailer: RetailerOutputDTO = Depends(auth_service.get_current_retailer)
+    current_retailer: RetailerOutputDTO = Depends(auth_service.get_current_retailer),
 ) -> List[OrderOutputDTO]:
     return order_service.get_order_list(page_size, page)
 
@@ -31,7 +31,7 @@ def get_order_list(
 @router.post("/order/", response_model=OrderOutputDTO, status_code=201)
 def insert_order(
     order: OrderInputDTO,
-    current_retailer: RetailerOutputDTO = Depends(auth_service.get_current_retailer)
+    current_retailer: RetailerOutputDTO = Depends(auth_service.get_current_retailer),
 ) -> OrderOutputDTO:
     return order_service.insert_order(order)
 
@@ -39,7 +39,7 @@ def insert_order(
 @router.delete("/order/{order_id}/")
 def remove_order(
     order_id: int,
-    current_retailer: RetailerOutputDTO = Depends(auth_service.get_current_retailer)
+    current_retailer: RetailerOutputDTO = Depends(auth_service.get_current_retailer),
 ) -> None:
     order = order_service.get_order_by_id(order_id)
     if not order:
@@ -51,8 +51,9 @@ def remove_order(
 
 @router.put("/order/{order_id}/", response_model=OrderOutputDTO)
 def update_order(
-    order_id: int, order_payload: OrderInputDTO,
-    current_retailer: RetailerOutputDTO = Depends(auth_service.get_current_retailer)
+    order_id: int,
+    order_payload: OrderInputDTO,
+    current_retailer: RetailerOutputDTO = Depends(auth_service.get_current_retailer),
 ) -> None:
     order_payload.id = order_id
     order = order_service.get_order_by_id(order_id)

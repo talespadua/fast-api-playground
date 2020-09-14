@@ -7,13 +7,10 @@ from sqlalchemy.orm import Session  # type: ignore
 
 from project.config import Config
 from project.dal.retailer import RetailerRepository
-from project.dtos.retailer import RetailerInputDTO
 from project.logger import Logger
 from project.dal.models import Base, RetailerModel
 from project.dal.mysql_connection import MySqlConnection
-from project.services import RetailerService
 from project.services.auth.auth_service import AuthService
-from test.helpers.factories.retailer_factory import RetailerModelFactory
 
 pytest_plugins = ["test.helpers.fixtures.config_fixtures"]
 
@@ -50,7 +47,7 @@ def auth_token(
         full_name="Authenticated User",
         document="99899899899",
         email=EmailStr("authenticated@gmail.com"),
-        password="authpassword"
+        password="authpassword",
     )
 
     retailer_repository.insert_retailer(reatailer_model)
@@ -60,7 +57,7 @@ def auth_token(
         {"sub": "authenticated@gmail.com"},
         expires_delta=timedelta(
             minutes=int(config.get_config("ACCESS_TOKEN_EXPIRE_MINUTES"))
-        )
+        ),
     )
 
     yield {"Authorization": f"Bearer {auth_token}"}

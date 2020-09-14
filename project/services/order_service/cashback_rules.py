@@ -36,8 +36,4 @@ class TwentyPercent(BaseRule):
         return round(value * Decimal(0.2), 2)
 
 
-CASHBACK_RULES = [
-    TenPercentRule(),
-    FifteenPercentRule(),
-    TwentyPercent()
-]
+CASHBACK_RULES = [TenPercentRule(), FifteenPercentRule(), TwentyPercent()]

@@ -7,7 +7,7 @@ from factory.fuzzy import (  # type: ignore[import]
     FuzzyInteger,
     FuzzyDecimal,
     FuzzyChoice,
-    FuzzyDateTime
+    FuzzyDateTime,
 )
 from datetime import datetime
 from project.dal.models import OrderModel

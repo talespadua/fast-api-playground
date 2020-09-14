@@ -34,8 +34,7 @@ class RetailerRepository:
             return cast(RetailerModel, retailer)
 
     def get_retailer_by_email(
-        self,
-        retailer_email: Optional[str]
+        self, retailer_email: Optional[str]
     ) -> Optional[RetailerModel]:
         with self.conn.session() as session:
             session.expire_on_commit = False

@@ -18,8 +18,8 @@ retailerService = RetailerService(config, logger, retailer_repository)
 
 @router.get("/retailer/{retailer_id}/", response_model=RetailerOutputDTO)
 async def get_retailer(
-        retailer_id: int,
-        current_retailer: RetailerOutputDTO = Depends(auth_service.get_current_retailer)
+    retailer_id: int,
+    current_retailer: RetailerOutputDTO = Depends(auth_service.get_current_retailer),
 ) -> RetailerOutputDTO:
     logger.info(f"Retailer ID: {str(retailer_id)}")
     retailer = retailerService.get_retailer(retailer_id)
@@ -33,7 +33,6 @@ async def post_retailer(retailer: RetailerInputDTO) -> RetailerOutputDTO:
     retailer_output = retailerService.insert_retailer(retailer)
     if not retailer_output:
         raise HTTPException(
-            status_code=405,
-            detail="Integrity Error. Check payload data"
+            status_code=405, detail="Integrity Error. Check payload data"
         )
     return retailer_output

@@ -7,16 +7,13 @@ from project.dtos.retailer import RetailerInputDTO, RetailerOutputDTO
 from project.dal.retailer import RetailerRepository
 from project.mappers.retailer_mappers import (
     convert_input_dto_to_model,
-    convert_model_to_output_dto
+    convert_model_to_output_dto,
 )
 
 
 class RetailerService:
     def __init__(
-        self,
-        config: Config,
-        logger: Logger,
-        retailer_repository: RetailerRepository
+        self, config: Config, logger: Logger, retailer_repository: RetailerRepository
     ) -> None:
         self.config = config
         self.logger = logger
@@ -29,8 +26,7 @@ class RetailerService:
         return None
 
     def insert_retailer(
-        self,
-        retailer: RetailerInputDTO
+        self, retailer: RetailerInputDTO
     ) -> Optional[RetailerOutputDTO]:
         retailer.password = get_password_hash(retailer.password)
         retailer_model = convert_input_dto_to_model(retailer)

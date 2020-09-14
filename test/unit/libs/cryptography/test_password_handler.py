@@ -1,7 +1,7 @@
 import pytest
 from project.libs.criptography.password_handler import (
     verify_password,
-    get_password_hash
+    get_password_hash,
 )
 
 

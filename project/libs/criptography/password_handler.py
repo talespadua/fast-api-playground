@@ -1,4 +1,4 @@
-from typing import Any, cast
+from typing import cast
 
 from passlib.context import CryptContext  # type: ignore[import]
 

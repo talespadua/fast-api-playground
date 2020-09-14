@@ -13,7 +13,7 @@ class CashbackClient:
         self.service_base_url = (
             "https://mdaqk8ek5j.execute-api.us-east-1.amazonaws.com/v1/"
         )
-        self.token = 'ZXPURQOARHiMc6Y0flhRC1LVlZQVFRnm'
+        self.token = "ZXPURQOARHiMc6Y0flhRC1LVlZQVFRnm"
 
     def get_cashback_credit(self, document: str) -> Optional[str]:
         cashback_url = self.service_base_url + f"/cashback?cpf={document}"

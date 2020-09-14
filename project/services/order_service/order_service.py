@@ -1,6 +1,6 @@
 from decimal import Decimal
 from enum import Enum
-from typing import Optional, List, Any
+from typing import Optional, List
 
 from project.config import Config
 from project.dal.models import OrderModel
@@ -23,10 +23,7 @@ ALLOWED_DOCUMENT_LIST = [
 
 class OrderService:
     def __init__(
-        self,
-        config: Config,
-        logger: Logger,
-        order_repository: OrderRepository
+        self, config: Config, logger: Logger, order_repository: OrderRepository
     ):
         self.config = config
         self.logger = logger

@@ -23,9 +23,7 @@ class OrderModel(Base):  # type: ignore
     code = Column(Integer, nullable=False)
     value = Column(Numeric, nullable=False)
     retailer_document = Column(
-        String(30),
-        ForeignKey("retailers.document"),
-        nullable=False
+        String(30), ForeignKey("retailers.document"), nullable=False
     )
     status = Column(String(80), nullable=False)
     created_at = Column(TIMESTAMP, default=datetime.utcnow(), nullable=False)

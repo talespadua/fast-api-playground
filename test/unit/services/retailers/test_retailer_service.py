@@ -8,8 +8,10 @@ from project.dal.retailer import RetailerRepository
 from project.dtos.retailer import RetailerOutputDTO
 from project.logger import Logger
 from project.services import RetailerService
-from test.helpers.factories.retailer_factory import RetailerModelFactory, \
-    RetailerInputDtoFactory
+from test.helpers.factories.retailer_factory import (
+    RetailerModelFactory,
+    RetailerInputDtoFactory,
+)
 
 
 class TestRetailerService:
@@ -38,22 +40,19 @@ class TestRetailerService:
             @pytest.fixture()
             def retailer_repository(self) -> RetailerRepository:
                 mocked_repository = MagicMock()
-                mocked_repository.get_retailer = MagicMock(
-                    return_value=None)
+                mocked_repository.get_retailer = MagicMock(return_value=None)
 
                 return cast(RetailerRepository, mocked_repository)
 
             def test_should_return_none(
-                self,
-                retailer_service: RetailerService
+                self, retailer_service: RetailerService
             ) -> None:
                 assert retailer_service.get_retailer(1) is None
 
     class TestGivenInsertingRetailer:
         class TestWhenInsertionIsSuccessful:
             def test_should_return_output_dto(
-                self,
-                retailer_service: RetailerService
+                self, retailer_service: RetailerService
             ) -> None:
                 retailer_output_dto = retailer_service.insert_retailer(
                     RetailerInputDtoFactory()
@@ -68,9 +67,8 @@ class TestRetailerService:
                 return cast(RetailerRepository, mocked_repository)
 
             def test_should_return_none(
-                self,
-                retailer_service: RetailerService
+                self, retailer_service: RetailerService
             ) -> None:
-                assert retailer_service.insert_retailer(
-                    RetailerInputDtoFactory()
-                ) is None
+                assert (
+                    retailer_service.insert_retailer(RetailerInputDtoFactory()) is None
+                )
