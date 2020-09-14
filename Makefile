@@ -5,6 +5,10 @@ raise-infrastructure:
 	$(info Raising Infrastructure)
 	docker-compose up -d
 
+shutdown-infrastructure:
+	$(info Shutting down Infrastructure)
+	docker-compose down
+
 test:
 	$(DOCKER_COMP_EXEC_CMD) python -m pytest test/
 

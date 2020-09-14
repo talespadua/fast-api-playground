@@ -29,7 +29,7 @@ services:
       - ./poetry.lock:/app/poetry.lock
       - ./Makefile:/app/Makefile
       - ./mypy.ini:/app/mypy.ini
-      - ./coverage-reports:/app/coverage-reports
+      - ./coverage-reports:/code/coverage-reports
     ports:
       - "8080:8080"
     depends_on:
